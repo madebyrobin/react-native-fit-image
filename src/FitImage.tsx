@@ -5,13 +5,13 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
-  ImageProperties,
+  ImageBackgroundProperties,
   ImageStyle,
   LayoutChangeEvent,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 
-export interface IFitImageProps extends ImageProperties {
+export interface IFitImageProps extends ImageBackgroundProperties {
   children?: ReactElement<any>;
   /**
    * Whether should display activity indicator or not
@@ -61,17 +61,17 @@ const propTypes = {
   indicatorColor: PropTypes.string,
   indicatorSize: PropTypes.oneOfType([
     PropTypes.oneOf(['small', 'large']),
-    PropTypes.number,
+    PropTypes.number
   ]),
   originalHeight: PropTypes.number,
-  originalWidth: PropTypes.number,
+  originalWidth: PropTypes.number
 };
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center'
+  }
 });
 
 class FitImage extends Component<IFitImageProps, IFitImageState> {
@@ -91,8 +91,10 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
       const size = [this.style.width, this.style.height];
 
       if (size.filter(Boolean).length === 1) {
-        throw new Error('Props error: size props must be present ' +
-                        'none or both of width and height.');
+        throw new Error(
+          'Props error: size props must be present ' +
+            'none or both of width and height.'
+        );
       }
 
       if (this.style.width) {
@@ -104,8 +106,10 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
 
     const originalSize = [props.originalWidth, props.originalHeight];
     if (originalSize.filter(Boolean).length === 1) {
-      throw new Error('Props error: originalSize props must be present ' +
-                      'none or both of originalWidth and originalHeight.');
+      throw new Error(
+        'Props error: originalSize props must be present ' +
+          'none or both of originalWidth and originalHeight.'
+      );
     }
 
     this.isFirstLoad = true;
@@ -114,7 +118,7 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
       isLoading: false,
       layoutWidth: 0,
       originalHeight: 0,
-      originalWidth: 0,
+      originalWidth: 0
     };
   }
 
@@ -147,17 +151,19 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
           this.style,
           this.sizeStyle,
           { height: this.getHeight() },
-          styles.container,
+          styles.container
         ]}
       >
-        {this.shouldDisplayIndicator() ? this.renderActivityIndicator() : this.props.children}
+        {this.shouldDisplayIndicator()
+          ? this.renderActivityIndicator()
+          : this.props.children}
       </ImageComponent>
     );
   }
 
   private shouldDisplayIndicator = () => {
     return this.state.isLoading && this.props.indicator !== false;
-  }
+  };
 
   private onLoad = () => {
     if (this.state.isLoading) {
@@ -167,20 +173,20 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
     if (typeof this.props.onLoad === 'function') {
       this.props.onLoad();
     }
-  }
+  };
 
   private onLoadStart = () => {
     if (this.isFirstLoad) {
       this.setState({ isLoading: true });
       this.isFirstLoad = false;
     }
-  }
+  };
 
   private onError = () => {
     if (this.state.isLoading) {
       this.setState({ isLoading: false });
     }
-  }
+  };
 
   private getHeight = () => {
     if (this.style && this.style.height) {
@@ -188,15 +194,13 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
     }
 
     return Math.round(this.getOriginalHeight() * this.getRatio());
-  }
+  };
 
-  private getOriginalHeight = () => (
-    this.props.originalHeight || this.state.originalHeight || 0
-  )
+  private getOriginalHeight = () =>
+    this.props.originalHeight || this.state.originalHeight || 0;
 
-  private getOriginalWidth = () => (
-    this.props.originalWidth || this.state.originalWidth || 0
-  )
+  private getOriginalWidth = () =>
+    this.props.originalWidth || this.state.originalWidth || 0;
 
   private getRatio = () => {
     if (this.getOriginalWidth() === 0) {
@@ -204,13 +208,13 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
     }
 
     return this.state.layoutWidth / this.getOriginalWidth();
-  }
+  };
 
   private onLayout = (event: LayoutChangeEvent) => {
     const { width: layoutWidth } = event.nativeEvent.layout;
 
     this.setState({ layoutWidth });
-  }
+  };
 
   private fetchOriginalSizeFromRemoteImage = () => {
     let uri;
@@ -234,16 +238,16 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
 
         this.setOriginalSize(originalWidth, originalHeight);
       },
-      () => null,
+      () => null
     );
-  }
+  };
 
   private setOriginalSize = (originalWidth: number, originalHeight: number) => {
     this.setState({
       originalHeight,
-      originalWidth,
+      originalWidth
     });
-  }
+  };
 
   private renderActivityIndicator = () => {
     return (
@@ -252,7 +256,7 @@ class FitImage extends Component<IFitImageProps, IFitImageState> {
         size={this.props.indicatorSize}
       />
     );
-  }
+  };
 }
 
 export default FitImage;
