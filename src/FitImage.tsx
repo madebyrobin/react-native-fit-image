@@ -56,6 +56,7 @@ export interface IFitImageState {
 
 const propTypes = {
   ...Image.propTypes,
+  ...ImageBackground.propTypes,
   indicator: PropTypes.bool,
   indicatorColor: PropTypes.string,
   indicatorSize: PropTypes.oneOfType([
